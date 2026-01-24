@@ -25,7 +25,6 @@ export function generateTicket(subject: string): Ticket {
 
     const selected: Question[] = [];
 
-    // по одному вопросу на каждый уровень сложности
     for (let difficulty = 1; difficulty <= PHYSICS_LEVELS; difficulty++) {
       const pool = physicsQuestions.filter(
         q => q.difficulty === difficulty
@@ -87,4 +86,50 @@ export function generateTicket(subject: string): Ticket {
     theory: selectedTheory,
     practice: selectedPractice,
   };
+}
+
+/**
+ * Используется в TicketGenerator.tsx
+ * Проверяет, достаточно ли вопросов для генерации билета
+ */
+export function validateQuestionCount(
+  subject: string
+): { valid: boolean; message?: string } {
+  const allQuestions = storage.getQuestions();
+
+  // Физика: по одному вопросу на каждый уровень
+  if (subject === 'Физика') {
+    for (let difficulty = 1; difficulty <= PHYSICS_LEVELS; difficulty++) {
+      const count = allQuestions.filter(
+        q => q.subject === 'Физика' && q.difficulty === difficulty
+      ).length;
+
+      if (count === 0) {
+        return {
+          valid: false,
+          message: `Недостаточно вопросов по физике: нет уровня ${difficulty}`,
+        };
+      }
+    }
+
+    return { valid: true };
+  }
+
+  // Остальные предметы
+  const theoryCount = allQuestions.filter(
+    q => q.subject === subject && q.type === 'theory'
+  ).length;
+
+  const practiceCount = allQuestions.filter(
+    q => q.subject === subject && q.type === 'practice'
+  ).length;
+
+  if (theoryCount < 2 || practiceCount < 3) {
+    return {
+      valid: false,
+      message: `Недостаточно вопросов: теория ${theoryCount}/2, практика ${practiceCount}/3`,
+    };
+  }
+
+  return { valid: true };
 }
