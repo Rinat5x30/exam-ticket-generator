@@ -1,3 +1,5 @@
+import { Question } from './types';
+
 const STORAGE_KEYS = {
   QUESTIONS: 'exam_questions',
   TICKET_NUMBERS: 'exam_last_ticket_numbers',
@@ -38,12 +40,14 @@ export const storage = {
   },
 
   getTicketNumber: (subject: string): number => {
+    if (typeof window === 'undefined') return 0;
     const data = localStorage.getItem(STORAGE_KEYS.TICKET_NUMBERS);
     const numbers = data ? JSON.parse(data) : {};
     return numbers[subject] || 0;
   },
 
   incrementTicketNumber: (subject: string): number => {
+    if (typeof window === 'undefined') return 1;
     const data = localStorage.getItem(STORAGE_KEYS.TICKET_NUMBERS);
     const numbers = data ? JSON.parse(data) : {};
     numbers[subject] = (numbers[subject] || 0) + 1;
@@ -59,7 +63,7 @@ export const storage = {
   },
 
   importQuestions: (jsonString: string): void => {
-    const questions = JSON.parse(jsonString);
+    const questions = JSON.parse(jsonString) as Question[];
     storage.saveQuestions(questions);
   },
 };
