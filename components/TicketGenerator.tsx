@@ -36,17 +36,32 @@ export default function TicketGenerator() {
   const handleCopy = () => {
     if (!ticket) return;
     
-    const text = `
+    let text = '';
+    
+    if (ticket.subject === 'Физика' && ticket.physics) {
+      // Format for Physics - just questions without level labels
+      text = `
 БИЛЕТ № ${ticket.number}
 Предмет: ${ticket.subject}
 Дата: ${ticket.date}
 
-ТЕОРЕТИЧЕСКИЕ ВОПРОСЫ:
-${ticket.theory.map((q, i) => `${i + 1}. ${q.text}`).join('\n')}
+${ticket.physics.map((q, i) => `${i + 1}. ${q.text}`).join('\n')}
+      `.trim();
+    } else {
+      // Format for other subjects - just questions without theory/practice headers
+      const allQuestions = [
+        ...ticket.theory.map((q, i) => `${i + 1}. ${q.text}`),
+        ...ticket.practice.map((q, i) => `${ticket.theory.length + i + 1}. ${q.text}`)
+      ];
+      
+      text = `
+БИЛЕТ № ${ticket.number}
+Предмет: ${ticket.subject}
+Дата: ${ticket.date}
 
-ПРАКТИЧЕСКИЕ ЗАДАНИЯ:
-${ticket.practice.map((q, i) => `${i + 1}. ${q.text}`).join('\n')}
-    `.trim();
+${allQuestions.join('\n')}
+      `.trim();
+    }
     
     navigator.clipboard.writeText(text);
     alert('Билет скопирован в буфер обмена');

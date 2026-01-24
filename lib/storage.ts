@@ -1,5 +1,3 @@
-import { Question } from './types';
-
 const STORAGE_KEYS = {
   QUESTIONS: 'exam_questions',
   TICKET_NUMBERS: 'exam_last_ticket_numbers',
@@ -26,7 +24,10 @@ export const storage = {
 
   addQuestions: (questions: Omit<Question, 'id'>[]): Question[] => {
     const existing = storage.getQuestions();
-    const newQuestions = questions.map(q => ({ ...q, id: crypto.randomUUID() }));
+    const newQuestions = questions.map(q => ({
+      ...q,
+      id: crypto.randomUUID(),
+    }));
     storage.saveQuestions([...existing, ...newQuestions]);
     return newQuestions;
   },
@@ -46,7 +47,10 @@ export const storage = {
     const data = localStorage.getItem(STORAGE_KEYS.TICKET_NUMBERS);
     const numbers = data ? JSON.parse(data) : {};
     numbers[subject] = (numbers[subject] || 0) + 1;
-    localStorage.setItem(STORAGE_KEYS.TICKET_NUMBERS, JSON.stringify(numbers));
+    localStorage.setItem(
+      STORAGE_KEYS.TICKET_NUMBERS,
+      JSON.stringify(numbers)
+    );
     return numbers[subject];
   },
 

@@ -2,12 +2,15 @@
 
 import { useState } from 'react';
 import { storage } from '@/lib/storage';
-import { SUBJECTS } from '@/lib/types';
+import { SUBJECTS, PHYSICS_LEVELS } from '@/lib/types';
 
 export default function BulkImport() {
   const [text, setText] = useState('');
   const [subject, setSubject] = useState(SUBJECTS[0]);
   const [type, setType] = useState<'theory' | 'practice'>('theory');
+  const [level, setLevel] = useState(1);
+
+  const isPhysics = subject === 'Физика';
 
   const handleBulkAdd = () => {
     const lines = text.split('\n').filter(line => line.trim());
@@ -19,8 +22,9 @@ export default function BulkImport() {
 
     const questions = lines.map(line => ({
       subject,
-      type,
+      type: isPhysics ? 'theory' as const : type, // Physics doesn't use type
       text: line.trim(),
+      ...(isPhysics && { level }), // Add level only for Physics
     }));
 
     storage.addQuestions(questions);
@@ -46,23 +50,41 @@ export default function BulkImport() {
           </select>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium mb-2">Тип:</label>
-          <select
-            value={type}
-            onChange={(e) => setType(e.target.value as 'theory' | 'practice')}
-            className="w-full px-3 py-2 border border-gray-300 rounded"
-          >
-            <option value="theory">Теория</option>
-            <option value="practice">Практика</option>
-          </select>
-        </div>
+        {isPhysics ? (
+          <div>
+            <label className="block text-sm font-medium mb-2">Уровень сложности (1-{PHYSICS_LEVELS}):</label>
+            <select
+              value={level}
+              onChange={(e) => setLevel(Number(e.target.value))}
+              className="w-full px-3 py-2 border border-gray-300 rounded"
+            >
+              {Array.from({ length: PHYSICS_LEVELS }, (_, i) => i + 1).map(lvl => (
+                <option key={lvl} value={lvl}>Уровень {lvl}</option>
+              ))}
+            </select>
+          </div>
+        ) : (
+          <div>
+            <label className="block text-sm font-medium mb-2">Тип:</label>
+            <select
+              value={type}
+              onChange={(e) => setType(e.target.value as 'theory' | 'practice')}
+              className="w-full px-3 py-2 border border-gray-300 rounded"
+            >
+              <option value="theory">Теория</option>
+              <option value="practice">Практика</option>
+            </select>
+          </div>
+        )}
       </div>
 
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="Вставьте вопросы, по одному на строке..."
+        placeholder={isPhysics 
+          ? `Вставьте вопросы уровня ${level}, по одному на строке...`
+          : "Вставьте вопросы, по одному на строке..."
+        }
         className="w-full h-40 px-3 py-2 border border-gray-300 rounded mb-4"
       />
 

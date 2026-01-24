@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { storage } from '@/lib/storage';
-import { Question, SUBJECTS } from '@/lib/types';
+import { Question, SUBJECTS, PHYSICS_LEVELS } from '@/lib/types';
 import BulkImport from '@/components/BulkImport';
 import Link from 'next/link';
 
 export default function QuestionsPage() {
   const [questions, setQuestions] = useState<Question[]>([]);
-  const [filter, setFilter] = useState({ subject: '', type: '' });
+  const [filter, setFilter] = useState({ subject: '', type: '', level: '' });
   const [search, setSearch] = useState('');
 
   useEffect(() => {
@@ -52,15 +52,25 @@ export default function QuestionsPage() {
   const filteredQuestions = questions.filter(q => {
     if (filter.subject && q.subject !== filter.subject) return false;
     if (filter.type && q.type !== filter.type) return false;
+    if (filter.level && q.level !== Number(filter.level)) return false;
     if (search && !q.text.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
   });
 
   const stats = questions.reduce((acc, q) => {
-    const key = `${q.subject}-${q.type}`;
-    acc[key] = (acc[key] || 0) + 1;
+    if (q.subject === 'Физика') {
+      // For Physics, count by level
+      const key = `${q.subject}-level${q.level || 0}`;
+      acc[key] = (acc[key] || 0) + 1;
+    } else {
+      // For other subjects, count by type
+      const key = `${q.subject}-${q.type}`;
+      acc[key] = (acc[key] || 0) + 1;
+    }
     return acc;
   }, {} as Record<string, number>);
+
+  const isPhysicsFilter = filter.subject === 'Физика';
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -77,15 +87,30 @@ export default function QuestionsPage() {
           <h3 className="font-bold mb-2">Статистика:</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
             {SUBJECTS.map(subject => {
-              const theory = stats[`${subject}-theory`] || 0;
-              const practice = stats[`${subject}-practice`] || 0;
-              return (
-                <div key={subject} className="p-2 bg-gray-50 rounded">
-                  <div className="font-medium">{subject}</div>
-                  <div>Теория: {theory}</div>
-                  <div>Практика: {practice}</div>
-                </div>
-              );
+              if (subject === 'Физика') {
+                const levelCounts = Array.from({ length: PHYSICS_LEVELS }, (_, i) => {
+                  const level = i + 1;
+                  return stats[`${subject}-level${level}`] || 0;
+                });
+                return (
+                  <div key={subject} className="p-2 bg-gray-50 rounded">
+                    <div className="font-medium">{subject}</div>
+                    {levelCounts.map((count, idx) => (
+                      <div key={idx}>Уровень {idx + 1}: {count}</div>
+                    ))}
+                  </div>
+                );
+              } else {
+                const theory = stats[`${subject}-theory`] || 0;
+                const practice = stats[`${subject}-practice`] || 0;
+                return (
+                  <div key={subject} className="p-2 bg-gray-50 rounded">
+                    <div className="font-medium">{subject}</div>
+                    <div>Теория: {theory}</div>
+                    <div>Практика: {practice}</div>
+                  </div>
+                );
+              }
             })}
           </div>
         </div>
@@ -109,12 +134,12 @@ export default function QuestionsPage() {
 
         {/* Фильтры */}
         <div className="bg-white p-6 rounded-lg shadow mb-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">Предмет:</label>
               <select
                 value={filter.subject}
-                onChange={(e) => setFilter({ ...filter, subject: e.target.value })}
+                onChange={(e) => setFilter({ ...filter, subject: e.target.value, type: '', level: '' })}
                 className="w-full px-3 py-2 border border-gray-300 rounded"
               >
                 <option value="">Все</option>
@@ -122,18 +147,35 @@ export default function QuestionsPage() {
               </select>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">Тип:</label>
-              <select
-                value={filter.type}
-                onChange={(e) => setFilter({ ...filter, type: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded"
-              >
-                <option value="">Все</option>
-                <option value="theory">Теория</option>
-                <option value="practice">Практика</option>
-              </select>
-            </div>
+            {isPhysicsFilter ? (
+              <div>
+                <label className="block text-sm font-medium mb-2">Уровень:</label>
+                <select
+                  value={filter.level}
+                  onChange={(e) => setFilter({ ...filter, level: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded"
+                >
+                  <option value="">Все</option>
+                  {Array.from({ length: PHYSICS_LEVELS }, (_, i) => i + 1).map(lvl => (
+                    <option key={lvl} value={lvl}>Уровень {lvl}</option>
+                  ))}
+                </select>
+              </div>
+            ) : (
+              <div>
+                <label className="block text-sm font-medium mb-2">Тип:</label>
+                <select
+                  value={filter.type}
+                  onChange={(e) => setFilter({ ...filter, type: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded"
+                  disabled={!filter.subject || filter.subject === 'Физика'}
+                >
+                  <option value="">Все</option>
+                  <option value="theory">Теория</option>
+                  <option value="practice">Практика</option>
+                </select>
+              </div>
+            )}
 
             <div>
               <label className="block text-sm font-medium mb-2">Поиск:</label>
@@ -158,9 +200,15 @@ export default function QuestionsPage() {
                 <div className="flex-1">
                   <div className="flex gap-2 mb-1">
                     <span className="px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded">{q.subject}</span>
-                    <span className={`px-2 py-0.5 text-xs rounded ${q.type === 'theory' ? 'bg-green-100 text-green-800' : 'bg-purple-100 text-purple-800'}`}>
-                      {q.type === 'theory' ? 'Теория' : 'Практика'}
-                    </span>
+                    {q.subject === 'Физика' ? (
+                      <span className="px-2 py-0.5 bg-orange-100 text-orange-800 text-xs rounded">
+                        Уровень {q.level}
+                      </span>
+                    ) : (
+                      <span className={`px-2 py-0.5 text-xs rounded ${q.type === 'theory' ? 'bg-green-100 text-green-800' : 'bg-purple-100 text-purple-800'}`}>
+                        {q.type === 'theory' ? 'Теория' : 'Практика'}
+                      </span>
+                    )}
                   </div>
                   <div className="text-sm">{q.text}</div>
                 </div>

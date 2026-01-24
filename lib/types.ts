@@ -4,6 +4,7 @@ export interface Question {
   type: 'theory' | 'practice';
   text: string;
   tags?: string[];
+  level?: number; // For Physics: 1-5 levels
 }
 
 export interface Ticket {
@@ -12,6 +13,7 @@ export interface Ticket {
   date: string;
   theory: Question[];
   practice: Question[];
+  physics?: Question[]; // For Physics level-based questions
 }
 
 export const SUBJECTS = [
@@ -19,4 +21,7 @@ export const SUBJECTS = [
   'Комплексный Анализ',
   'Диференциальные уравнения',
   'Численные методы',
+  'Физика', // New subject with custom logic
 ] as const;
+
+export const PHYSICS_LEVELS = 5; // Number of levels for Physics
