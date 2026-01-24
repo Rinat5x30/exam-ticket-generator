@@ -1,6 +1,5 @@
-import { Question, Ticket } from './types';
+import { Question, Ticket, PHYSICS_LEVELS } from './types';
 import { storage } from './storage';
-import { PHYSICS_LEVELS } from './types';
 
 function shuffleArray<T>(array: T[]): T[] {
   const shuffled = [...array];
@@ -14,7 +13,7 @@ function shuffleArray<T>(array: T[]): T[] {
 export function generateTicket(subject: string): Ticket {
   const allQuestions = storage.getQuestions();
 
-  // Physics logic
+  // ===== ФИЗИКА =====
   if (subject === 'Физика') {
     const physicsQuestions = allQuestions.filter(
       q => q.subject === 'Физика'
@@ -26,7 +25,7 @@ export function generateTicket(subject: string): Ticket {
 
     const selected: Question[] = [];
 
-    // For each difficulty (1..PHYSICS_LEVELS) select one random question
+    // по одному вопросу на каждый уровень сложности
     for (let difficulty = 1; difficulty <= PHYSICS_LEVELS; difficulty++) {
       const pool = physicsQuestions.filter(
         q => q.difficulty === difficulty
@@ -34,7 +33,7 @@ export function generateTicket(subject: string): Ticket {
 
       if (pool.length === 0) {
         throw new Error(
-          `Нет вопросов для уровня ${difficulty} по физике. Добавьте хотя бы один вопрос для каждого уровня (1-${PHYSICS_LEVELS}).`
+          `Нет вопросов для уровня ${difficulty} по физике. Добавьте хотя бы один вопрос для каждого уровня (1–${PHYSICS_LEVELS}).`
         );
       }
 
@@ -54,10 +53,11 @@ export function generateTicket(subject: string): Ticket {
     };
   }
 
-  // Default logic for other subjects
+  // ===== ОСТАЛЬНЫЕ ПРЕДМЕТЫ =====
   const theoryPool = allQuestions.filter(
     q => q.subject === subject && q.type === 'theory'
   );
+
   const practicePool = allQuestions.filter(
     q => q.subject === subject && q.type === 'practice'
   );
