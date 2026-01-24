@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 import { storage } from '@/lib/storage';
-import { SUBJECTS, PHYSICS_LEVELS } from '@/lib/types';
+import { Question, SUBJECTS, PHYSICS_LEVELS } from '@/lib/types';
+
+type QuestionInput = Omit<Question, 'id'>;
 
 export default function BulkImport() {
   const [subject, setSubject] = useState<string>(SUBJECTS[0]);
@@ -28,11 +30,11 @@ export default function BulkImport() {
       return;
     }
 
-    const questions = lines.map(line => {
+    const questions: QuestionInput[] = lines.map(line => {
       if (isPhysics) {
         return {
           subject,
-          type: 'theory',
+          type: 'theory', // для физики тип фиксированный
           text: line,
           difficulty,
         };
@@ -40,7 +42,7 @@ export default function BulkImport() {
 
       return {
         subject,
-        type,
+        type, // строго 'theory' | 'practice'
         text: line,
       };
     });
@@ -75,7 +77,9 @@ export default function BulkImport() {
             <label className="block text-sm font-medium mb-2">Тип</label>
             <select
               value={type}
-              onChange={e => setType(e.target.value as 'theory' | 'practice')}
+              onChange={e =>
+                setType(e.target.value as 'theory' | 'practice')
+              }
               className="w-full px-3 py-2 border rounded"
             >
               <option value="theory">Теория</option>
