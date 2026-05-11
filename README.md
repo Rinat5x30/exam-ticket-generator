@@ -1,4 +1,4 @@
-# Генератор Экзаменационных Билетов
+# Exam Ticket Generator
 
 <div align="center">
 
@@ -8,88 +8,88 @@
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-3+-38B2AC?logo=tailwind-css)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-Умное веб-приложение для генерации случайных экзаменационных билетов с поддержкой множества предметов и уровней сложности.
+A powerful web application for generating random exam tickets with support for multiple subjects and difficulty levels.
 
-[Функции](#-функции) • [Установка](#-установка) • [Использование](#-использование) • [Структура](#-структура-проекта)
+[Features](#-features) • [Installation](#-installation) • [Usage](#-usage) • [Structure](#-project-structure)
 
 </div>
 
 ---
 
-## 📋 Описание
+## 📋 Description
 
-**Генератор Экзаменационных Билетов** — это современное веб-приложение, позволяющее преподавателям и методистам создавать и управлять банком вопросов для экзаменов, а также автоматически генерировать рандомизированные билеты для студентов.
+**Exam Ticket Generator** is a modern web application that enables educators and administrators to create and manage a bank of exam questions and automatically generate randomized exam tickets for students.
 
-Приложение обеспечивает:
-- 🎯 Быструю генерацию билетов по разным предметам
-- 📚 Управление большим банком вопросов
-- 🔄 Поддержку различных форм организации вопросов (теория/практика или уровни сложности)
-- 💾 Локальное хранилище данных (IndexedDB)
-- 🎨 Интуитивный и отзывчивый интерфейс
-
----
-
-## ✨ Функции
-
-### Основные возможности
-
-- **Генерация билетов** — случайная выборка вопросов из банка с соблюдением структуры предмета
-- **Управление вопросами** — добавление, редактирование, удаление вопросов
-- **Массовый импорт** — быстрое добавление большого количества вопросов (копирование текста из буфера обмена)
-- **Множество предметов** — поддержка различных дисциплин с их спецификой
-- **Экспорт** — сохранение билетов в удобном формате
-- **Локальное хранение** — все данные сохраняются в браузере (приватность)
-
-### Особенности
-
-#### 📐 Поддержка разных структур предметов
-
-- **Стандартные предметы** (Математика, Литература, и т.д.):
-  - Вопросы разделены на **Теорию** и **Практику**
-  - Билет содержит случайные вопросы из обеих категорий
-
-- **Физика** (специальный режим):
-  - Вопросы организованы по **5 уровням сложности** (1-5)
-  - Билет содержит ровно **5 вопросов** (по одному из каждого уровня)
-  - Идеально для дифференцированной оценки знаний
-
-#### 🔒 Конфиденциальность данных
-
-- Все вопросы и билеты хранятся локально в браузере
-- Нет отправки данных на серверы
-- Резервное копирование и восстановление через JSON-файлы
+The application provides:
+- 🎯 Fast ticket generation across multiple subjects
+- 📚 Management of large question banks
+- 🔄 Support for different question organization methods (theory/practice or difficulty levels)
+- 💾 Local data storage (IndexedDB)
+- 🎨 Intuitive and responsive user interface
 
 ---
 
-## 🚀 Быстрый старт
+## ✨ Features
 
-### Требования
+### Core Capabilities
 
-- Node.js 18+ 
-- npm или yarn
+- **Ticket Generation** — random selection of questions from the bank while maintaining subject structure
+- **Question Management** — add, edit, and delete questions
+- **Bulk Import** — quickly add large quantities of questions (paste from clipboard)
+- **Multi-Subject Support** — support for various disciplines with their specific requirements
+- **Export** — save tickets in convenient formats
+- **Local Storage** — all data stored in the browser (privacy-focused)
 
-### Установка
+### Special Features
 
-1. **Клонируйте репозиторий:**
+#### 📐 Support for Different Subject Structures
+
+- **Standard Subjects** (Mathematics, Literature, etc.):
+  - Questions divided into **Theory** and **Practice**
+  - Tickets contain random questions from both categories
+
+- **Physics** (Special Mode):
+  - Questions organized by **5 difficulty levels** (1-5)
+  - Tickets contain exactly **5 questions** (one from each level)
+  - Ideal for differentiated assessment of knowledge
+
+#### 🔒 Data Privacy
+
+- All questions and tickets stored locally in the browser
+- No data sent to external servers
+- Backup and restore via JSON files
+
+---
+
+## 🚀 Quick Start
+
+### Requirements
+
+- Node.js 18+
+- npm or yarn
+
+### Installation
+
+1. **Clone the repository:**
    ```bash
    git clone https://github.com/yourusername/exam-ticket-generator.git
    cd exam-ticket-generator
    ```
 
-2. **Установите зависимости:**
+2. **Install dependencies:**
    ```bash
    npm install
    ```
 
-3. **Запустите сервер разработки:**
+3. **Start the development server:**
    ```bash
    npm run dev
    ```
 
-4. **Откройте приложение:**
-   Перейдите на [http://localhost:3000](http://localhost:3000) в браузере
+4. **Open the application:**
+   Navigate to [http://localhost:3000](http://localhost:3000) in your browser
 
-### Сборка для продакшена
+### Production Build
 
 ```bash
 npm run build
@@ -98,141 +98,139 @@ npm start
 
 ---
 
-## 📖 Использование
+## 📖 Usage
 
-### 1️⃣ Добавление вопросов
+### 1️⃣ Adding Questions
 
-#### Способ 1: Массовое добавление
+#### Method 1: Bulk Import
 
-1. Перейдите на страницу **"Управление вопросами"**
-2. В разделе **"Массовое добавление"**:
-   - Выберите предмет
-   - Выберите тип (для стандартных предметов) или уровень (для физики)
-   - Вставьте вопросы (по одному на строке)
-   - Нажмите **"Добавить все"**
+1. Go to the **"Manage Questions"** page
+2. In the **"Bulk Import"** section:
+   - Select a subject
+   - Choose type (for standard subjects) or level (for physics)
+   - Paste questions (one per line)
+   - Click **"Add All"**
 
-#### Способ 2: Импорт из файла
+#### Method 2: Import from File
 
-- Используйте JSON-файл с предварительно подготовленными вопросами
-- Формат совместим с `seed-questions.json`
+- Use a JSON file with pre-prepared questions
+- Format compatible with `seed-questions.json`
 
-### 2️⃣ Генерация билета
+### 2️⃣ Generate a Ticket
 
-1. На **главной странице** выберите предмет
-2. Нажмите **"Сгенерировать"**
-3. Система создаст случайный билет с вопросами
-4. Просмотрите, отредактируйте или переген
+1. On the **main page**, select a subject
+2. Click **"Generate"**
+3. The system will create a random ticket with questions
+4. View, edit, or regenerate as needed
 
-ерируйте при необходимости
+### 3️⃣ Export Results
 
-### 3️⃣ Экспорт результата
-
-- Используйте функцию **"Печать"** для вывода на принтер
-- Сохраняйте результаты как PDF через браузер
+- Use the **"Print"** function to output to printer
+- Save results as PDF through your browser
 
 ---
 
-## 🏗️ Структура проекта
+## 🏗️ Project Structure
 
 ```
 exam-ticket-generator/
-├── app/                      # Next.js приложение
-│   ├── globals.css           # Глобальные стили
-│   ├── layout.tsx            # Главный макет
-│   ├── page.tsx              # Главная страница
+├── app/                      # Next.js application
+│   ├── globals.css           # Global styles
+│   ├── layout.tsx            # Main layout
+│   ├── page.tsx              # Home page
 │   └── questions/
-│       └── page.tsx          # Страница управления вопросами
-├── components/               # React компоненты
-│   ├── TicketGenerator.tsx   # Основной компонент генератора
-│   ├── Ticket.tsx            # Отображение билета
-│   └── BulkImport.tsx        # Компонент массового импорта
-├── lib/                      # Утилиты и логика
-│   ├── generator.ts          # Логика генерации билетов
-│   ├── storage.ts            # Управление хранилищем (IndexedDB)
-│   ├── types.ts              # TypeScript типы и интерфейсы
-│   └── validators.ts         # Валидация данных
-├── public/                   # Статические файлы
-│   └── seed-questions.json   # Пример вопросов
-├── package.json              # Зависимости проекта
-└── tsconfig.json            # Конфигурация TypeScript
+│       └── page.tsx          # Question management page
+├── components/               # React components
+│   ├── TicketGenerator.tsx   # Main generator component
+│   ├── Ticket.tsx            # Ticket display
+│   └── BulkImport.tsx        # Bulk import component
+├── lib/                      # Utilities and logic
+│   ├── generator.ts          # Ticket generation logic
+│   ├── storage.ts            # Storage management (IndexedDB)
+│   ├── types.ts              # TypeScript types and interfaces
+│   └── validators.ts         # Data validation
+├── public/                   # Static files
+│   └── seed-questions.json   # Example questions
+├── package.json              # Project dependencies
+└── tsconfig.json            # TypeScript configuration
 ```
 
-### Ключевые файлы
+### Key Files
 
-| Файл | Описание |
-|------|---------|
-| [lib/generator.ts](lib/generator.ts) | Алгоритм выбора вопросов и создания билетов |
-| [lib/storage.ts](lib/storage.ts) | Работа с локальным хранилищем (IndexedDB) |
-| [lib/types.ts](lib/types.ts) | Определение типов данных (Question, Ticket, Subject) |
-| [components/TicketGenerator.tsx](components/TicketGenerator.tsx) | Главный интерфейс приложения |
+| File | Description |
+|------|-------------|
+| [lib/generator.ts](lib/generator.ts) | Algorithm for question selection and ticket creation |
+| [lib/storage.ts](lib/storage.ts) | Local storage management (IndexedDB) |
+| [lib/types.ts](lib/types.ts) | Data type definitions (Question, Ticket, Subject) |
+| [components/TicketGenerator.tsx](components/TicketGenerator.tsx) | Main application interface |
 
 ---
 
-## 🛠️ Технологический стек
+## 🛠️ Technology Stack
 
 - **Frontend Framework:** Next.js 15 + React 19
-- **Язык:** TypeScript
-- **Стили:** Tailwind CSS 3
-- **Хранилище:** IndexedDB (браузерное хранилище)
-- **Инструменты:** ESLint, PostCSS
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS 3
+- **Storage:** IndexedDB (browser storage)
+- **Tools:** ESLint, PostCSS
 
 ---
 
-## 📊 Поддерживаемые предметы
+## 📊 Supported Subjects
 
-| Предмет | Структура | Вопросов в билете |
-|---------|-----------|-------------------|
-| Математика | Теория + Практика | Переменное |
-| Физика | 5 уровней сложности | 5 (по 1 с уровня) |
-| Литература | Теория + Практика | Переменное |
-| История | Теория + Практика | Переменное |
-| Химия | Теория + Практика | Переменное |
-| *Другие* | Теория + Практика | Переменное |
-
----
-
-## 🔄 Обновления и особенности
-
-### v1.0.0 — Поддержка физики с уровнями сложности
-
-✅ Добавлена поддержка специальной структуры для предмета "Физика"  
-✅ Логика генерации по уровням сложности (1-5)  
-✅ Интеграция с системой вопросов и хранилищем  
-✅ Улучшенный интерфейс управления вопросами по физике  
+| Subject | Structure | Questions per Ticket |
+|---------|-----------|----------------------|
+| Mathematics | Theory + Practice | Variable |
+| Physics | 5 difficulty levels | 5 (1 per level) |
+| Literature | Theory + Practice | Variable |
+| History | Theory + Practice | Variable |
+| Chemistry | Theory + Practice | Variable |
+| *Custom* | Theory + Practice | Variable |
 
 ---
 
-## 🤝 Контрибьютинг
+## 🔄 Updates and Features
 
-Мы приветствуем улучшения! Пожалуйста:
+### v1.0.0 — Physics Support with Difficulty Levels
 
-1. Создайте Fork репозитория
-2. Создайте ветку для вашей функции (`git checkout -b feature/amazing-feature`)
-3. Закоммитьте изменения (`git commit -m 'Add amazing feature'`)
-4. Запушьте в ветку (`git push origin feature/amazing-feature`)
-5. Откройте Pull Request
-
----
-
-## 📝 Лицензия
-
-Этот проект лицензирован под MIT License — см. файл [LICENSE](LICENSE) для деталей.
+✅ Added support for special structure for "Physics" subject  
+✅ Generation logic based on difficulty levels (1-5)  
+✅ Integration with question system and storage  
+✅ Enhanced interface for physics question management  
 
 ---
 
-## 💬 Поддержка
+## 🤝 Contributing
 
-Если у вас есть вопросы или предложения:
+We welcome improvements! Please:
 
-- 📧 Создайте [Issue](../../issues) 
-- 💡 Предложите улучшение через Pull Request
-- 📚 Смотрите [документацию](#) для подробной информации
+1. Fork the repository
+2. Create a branch for your feature (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 💬 Support
+
+If you have questions or suggestions:
+
+- 📧 Create an [Issue](../../issues)
+- 💡 Propose improvements via Pull Request
+- 📚 Check [documentation](#) for detailed information
 
 ---
 
 <div align="center">
 
-Создано с ❤️ для преподавателей
+Made with ❤️ for educators
 
 </div>
 
