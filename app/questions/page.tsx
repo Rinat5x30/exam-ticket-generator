@@ -36,18 +36,36 @@ export default function QuestionsPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Проверка размера файла (макс 1MB)
+    if (file.size > 1048576) {
+      alert('Файл слишком большой (максимум 1MB)');
+      return;
+    }
+
+    // Проверка типа файла
+    if (!file.type.includes('json') && !file.name.endsWith('.json')) {
+      alert('Пожалуйста, выберите JSON файл');
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = (event) => {
       try {
         storage.importQuestions(event.target?.result as string);
         setQuestions(storage.getQuestions());
-        alert('Импорт выполнен');
+        alert('✓ Импорт выполнен успешно');
+        // Очищаем input для возможности повторного выбора того же файла
+        e.target.value = '';
       } catch (err) {
-        alert(
-          'Ошибка импорта: ' +
-            (err instanceof Error ? err.message : 'неизвестная ошибка')
-        );
+        const message = err instanceof Error ? err.message : 'Неизвестная ошибка';
+        alert(`⚠ Ошибка импорта: ${message}`);
+        console.error('Импорт ошибка:', err);
+        e.target.value = '';
       }
+    };
+    reader.onerror = () => {
+      alert('⚠ Ошибка при чтении файла');
+      e.target.value = '';
     };
     reader.readAsText(file);
   };
